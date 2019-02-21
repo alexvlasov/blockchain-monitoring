@@ -79,3 +79,13 @@ func (coin *Bitcoin) MonitorDifferences(gauge prometheus.Gauge) {
 
 	gauge.Set(diff)
 }
+
+func (coin *Bitcoin) MonitorPeers(gauge prometheus.Gauge) {
+	count, err := coin.client.GetConnectionCount()
+	if err != nil {
+		log.Print(err)
+	}
+
+	// update block count
+	gauge.Set(float64(count))
+}

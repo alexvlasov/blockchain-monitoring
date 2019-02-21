@@ -9,7 +9,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/yujinlim/blockchain-monitoring/coin"
+	"github.com/alexvlasov/blockchain-monitoring/coin"
 )
 
 // parse cli
@@ -25,7 +25,7 @@ func main() {
 		log.Println(err)
 	}
 
-	coinType := os.Getenv("COIN_TYPE")
+	coinType := "bitcoin" // os.Getenv("COIN_TYPE")
 	port := os.Getenv("PORT")
 	namespace := os.Getenv("COIN_NAMESPACE")
 	host := os.Getenv("COIN_HOST")
@@ -42,11 +42,11 @@ func main() {
 	}
 	addr := strings.Join([]string{":", port}, "")
 
-	if coinType == "ethereum" {
-		client, err = coin.NewEthCoin(host, coin.NetworkType(network))
-	} else {
+	// if coinType == "ethereum" {
+	// 	client, err = coin.NewEthCoin(host, coin.NetworkType(network))
+	// } else {
 		client, err = coin.NewBitcoinCoin(host, username, password, coin.Type(coinType), coin.NetworkType(network))
-	}
+	// }
 
 	if err != nil {
 		log.Fatal(err)
@@ -77,7 +77,13 @@ func start(coin coin.Coin, namespace string, addr string) {
 		Help:      "Block differences between current node and other api service",
 	})
 
-	prometheus.MustRegister(blockCounter, statusCounter, diffCounter)
+	peersCounter := prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: namespace,
+		Name:      "peers",
+		Help:      "Peers counter",
+	})
+
+	prometheus.MustRegister(blockCounter, statusCounter, diffCounter, peersCounter)
 
 	// spin go routine
 	// monitor block counter
@@ -100,6 +106,13 @@ func start(coin coin.Coin, namespace string, addr string) {
 	go func() {
 		for {
 			coin.MonitorDifferences(diffCounter)
+			time.Sleep(30 * time.Second)
+		}
+	}()
+
+	go func() {
+		for {
+			coin.MonitorPeers(peersCounter)
 			time.Sleep(30 * time.Second)
 		}
 	}()
