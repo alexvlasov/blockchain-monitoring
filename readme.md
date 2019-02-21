@@ -41,7 +41,7 @@ COIN_NAMESPACE=ethereum
 ## Usage
 ### Via git
 ```bash
-git clone git@github.com:yujinlim/blockchain-monitoring.git
+git clone git@github.com:alexvlasov/blockchain-monitoring.git
 
 cd blockchain-monitoring
 

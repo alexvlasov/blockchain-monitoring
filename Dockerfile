@@ -1,8 +1,8 @@
-FROM golang:1.8.3
+FROM golang:1.11
 
 LABEL maintainer="Yu Jin"
 
-ARG package_name=github.com/yujinlim/blockchain-monitoring
+ARG package_name=github.com/alexvlasov/blockchain-monitoring
 ARG workdir=$GOPATH/src/$package_name
 
 WORKDIR $GOPATH
