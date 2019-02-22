@@ -77,7 +77,7 @@ func (coin *Bitcoin) MonitorDifferences(gauge prometheus.Gauge) {
 		log.Panic(err)
 	}
 
-	gauge.Set(diff)
+	gauge.Set(float64(diff))
 }
 
 func (coin *Bitcoin) MonitorPeers(gauge prometheus.Gauge) {

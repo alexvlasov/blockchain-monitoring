@@ -71,11 +71,11 @@ func start(coin coin.Coin, namespace string, addr string) {
 		Help:      "Status of coin node",
 	})
 
-	diffCounter := prometheus.NewGauge(prometheus.GaugeOpts{
-		Namespace: namespace,
-		Name:      "block_differences",
-		Help:      "Block differences between current node and other api service",
-	})
+	// diffCounter := prometheus.NewGauge(prometheus.GaugeOpts{
+	// 	Namespace: namespace,
+	// 	Name:      "block_differences",
+	// 	Help:      "Block differences between current node and other api service",
+	// })
 
 	peersCounter := prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: namespace,
@@ -83,7 +83,7 @@ func start(coin coin.Coin, namespace string, addr string) {
 		Help:      "Peers counter",
 	})
 
-	prometheus.MustRegister(blockCounter, statusCounter, diffCounter, peersCounter)
+	prometheus.MustRegister(blockCounter, statusCounter, peersCounter)
 
 	// spin go routine
 	// monitor block counter
@@ -102,13 +102,13 @@ func start(coin coin.Coin, namespace string, addr string) {
 		}
 	}()
 
-	// monitor block differences
-	go func() {
-		for {
-			coin.MonitorDifferences(diffCounter)
-			time.Sleep(30 * time.Second)
-		}
-	}()
+	// // monitor block differences
+	// go func() {
+	// 	for {
+	// 		coin.MonitorDifferences(diffCounter)
+	// 		time.Sleep(30 * time.Second)
+	// 	}
+	// }()
 
 	go func() {
 		for {
