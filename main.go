@@ -25,8 +25,8 @@ func main() {
 		log.Println(err)
 	}
 
-	coinType := "bitcoin" // os.Getenv("COIN_TYPE")
-	port := os.Getenv("PORT")
+	coinType :=  os.Getenv("COIN_TYPE")
+	port := os.Getenv("COIN_PORT")
 	namespace := os.Getenv("COIN_NAMESPACE")
 	host := os.Getenv("COIN_HOST")
 	username := os.Getenv("COIN_USER")
@@ -42,11 +42,15 @@ func main() {
 	}
 	addr := strings.Join([]string{":", port}, "")
 
-	// if coinType == "ethereum" {
-	// 	client, err = coin.NewEthCoin(host, coin.NetworkType(network))
-	// } else {
+	if len(coinType) == 0 {
+                coinType = "bitcoin"
+        }
+
+	//if coinType == "ethereum" {
+	//	client, err = coin.NewEthCoin(host, coin.NetworkType(network))
+	//} else {
 		client, err = coin.NewBitcoinCoin(host, username, password, coin.Type(coinType), coin.NetworkType(network))
-	// }
+	//}
 
 	if err != nil {
 		log.Fatal(err)
