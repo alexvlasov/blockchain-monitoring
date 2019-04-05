@@ -44,7 +44,7 @@ func main() {
 
 	if len(coinType) == 0 {
                 coinType = "bitcoin"
-        }
+    }
 
 	//if coinType == "ethereum" {
 	//	client, err = coin.NewEthCoin(host, coin.NetworkType(network))
@@ -87,7 +87,13 @@ func start(coin coin.Coin, namespace string, addr string) {
 		Help:      "Peers counter",
 	})
 
-	prometheus.MustRegister(blockCounter, statusCounter, peersCounter)
+	poolCounter := prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: namespace,
+		Name:      "pool",
+		Help:      "Pool counter",
+	})
+
+	prometheus.MustRegister(blockCounter, statusCounter, peersCounter, poolCounter)
 
 	// spin go routine
 	// monitor block counter
@@ -117,6 +123,13 @@ func start(coin coin.Coin, namespace string, addr string) {
 	go func() {
 		for {
 			coin.MonitorPeers(peersCounter)
+			time.Sleep(30 * time.Second)
+		}
+	}()
+
+	go func() {
+		for {
+			coin.MonitorPool(poolCounter)
 			time.Sleep(30 * time.Second)
 		}
 	}()

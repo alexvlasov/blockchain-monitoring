@@ -29,5 +29,6 @@ type Coin interface {
 	MonitorStatus(gauge prometheus.Gauge)
 	MonitorDifferences(gauge prometheus.Gauge)
 	MonitorPeers(gauge prometheus.Gauge)
+	MonitorPool(gauge prometheus.Gauge)
 	Ping() error
 }

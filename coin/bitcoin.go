@@ -89,3 +89,13 @@ func (coin *Bitcoin) MonitorPeers(gauge prometheus.Gauge) {
 	// update block count
 	gauge.Set(float64(count))
 }
+
+func (coin *Bitcoin) MonitorPool(gauge prometheus.Gauge) {
+	hashes, err := coin.client.GetRawMempool()
+	if err != nil {
+		log.Print(err)
+	}
+	count := len(hashes)
+	// update block count
+	gauge.Set(float64(count))
+}
